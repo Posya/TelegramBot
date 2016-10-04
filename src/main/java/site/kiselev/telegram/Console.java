@@ -1,4 +1,4 @@
-package site.kiselev;
+package site.kiselev.telegram;
 
 
 import com.pengrad.telegrambot.Callback;

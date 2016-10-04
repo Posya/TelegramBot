@@ -1,5 +1,7 @@
 package site.kiselev;
 
+import site.kiselev.telegram.Telegram;
+
 /**
  * Main Application class
  */
