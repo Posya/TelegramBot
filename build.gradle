@@ -24,10 +24,10 @@ repositories {
 dependencies {
     //Spring
     compile ('org.springframework:spring-context:4.3.3.RELEASE') {
-        exclude module: 'commons-logging'
+        //exclude module: 'commons-logging'
     }
     // Logging
-    compile 'org.slf4j:jcl-over-slf4j:1.5.8'
+    //compile 'org.slf4j:jcl-over-slf4j:1.5.8'
     compile group: 'org.slf4j',                         name: 'slf4j-api',                      version: '1.7.21'
     compile group: 'org.apache.logging.log4j',          name: 'log4j-slf4j-impl',               version: '2.6.1'
     compile group: 'org.apache.logging.log4j',          name: 'log4j-core',                     version: '2.6.1'

@@ -5,4 +5,5 @@ package site.kiselev.telegram;
  */
 public interface Telegram {
     void run();
+    void exit();
 }

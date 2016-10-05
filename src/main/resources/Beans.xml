@@ -22,6 +22,10 @@
 
     <bean id="SendThread" class="site.kiselev.telegram.threads.SendThreadImpl">
         <constructor-arg ref="TelegramBot"/>
+        <property name="sendQueue" ref="sendQueue"/>
+    </bean>
+
+    <bean id="sendQueue" class="java.util.concurrent.LinkedBlockingQueue">
     </bean>
 
     <bean id="ReceiveThread" class="site.kiselev.telegram.threads.ReceiveThreadImpl">

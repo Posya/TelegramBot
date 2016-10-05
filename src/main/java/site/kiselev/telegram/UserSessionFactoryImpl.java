@@ -4,11 +4,13 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
+import com.pengrad.telegrambot.request.SendMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 /**
  * UserSessionFactory
@@ -30,12 +32,12 @@ public class UserSessionFactoryImpl implements UserSessionFactory {
         cache = buildCache(otherLoader);
     }
 
-    public UserSessionFactoryImpl() {
+    public UserSessionFactoryImpl(Consumer<SendMessage> sendFunction) {
         logger.debug("Creating new UserSessionFactory");
         CacheLoader<Integer, UserSession> loader = new CacheLoader<Integer, UserSession>() {
             @Override
             public UserSession load(Integer userID) throws Exception {
-                return new UserSessionImpl(userID);
+                return new UserSessionImpl(userID, sendFunction);
             }
         };
         cache = buildCache(loader);

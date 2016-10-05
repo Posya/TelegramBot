@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.request.GetUpdates;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import site.kiselev.telegram.UserSession;
 import site.kiselev.telegram.UserSessionFactory;
 
 /**
@@ -31,7 +32,8 @@ public class ReceiveThreadImpl implements ReceiveThread {
             GetUpdatesResponse updatesResponse = bot.execute(
                     new GetUpdates().offset(lastUpdateId));
             for (Update update : updatesResponse.updates()) {
-                userSessionFactory.getUserSession(update.message().from().id());
+                final UserSession session = userSessionFactory.getUserSession(update.message().from().id());
+                session.newMessage(update);
             }
         }
     }

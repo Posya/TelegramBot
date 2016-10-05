@@ -19,7 +19,7 @@ public class SendThreadImpl implements SendThread {
     private final Logger logger = LoggerFactory.getLogger(SendThreadImpl.class);
     private final TelegramBot bot;
 
-    private BlockingQueue<SendMessage> sendQueue = new LinkedBlockingQueue<>();
+    private BlockingQueue<SendMessage> sendQueue;
     private boolean isExit = false;
 
     public SendThreadImpl(TelegramBot bot) {
