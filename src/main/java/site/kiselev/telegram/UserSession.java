@@ -1,15 +1,8 @@
 package site.kiselev.telegram;
 
 /**
- * UserSession
+ * Created by posya on 10/5/16.
  */
-public class UserSession {
-
-    public UserSession(Integer userID) {
-
-    }
-
-    public void stop() {
-
-    }
+public interface UserSession {
+    void stop();
 }

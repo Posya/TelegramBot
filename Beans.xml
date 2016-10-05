@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="Telegram" class="site.kiselev.telegram.Telegram">
+        <property name="TelegramBot" ref="TelegramBot"/>
+        <property name="SendThread" ref="SendThread"/>
+        <property name="ReceiveThread" ref="ReceiveThread"/>
+        <property name="UserSessionFactory" ref="UserSessionFactory"/>
+    </bean>
+
+    <bean id="TelegramBot"
+          class="com.pengrad.telegrambot.TelegramBotAdapter"
+          factory-method="build">
+        <constructor-arg type="java.lang.String">
+            <util:constant static-field="site.kiselev.telegram.ApplicationConfig.TELEGRAM_BOT_API_TOKEN"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="SendThread" class="site.kiselev.telegram.threads.SendThreadImpl">
+        <constructor-arg ref="TelegramBot"/>
+    </bean>
+
+    <bean id="ReceiveThread" class="site.kiselev.telegram.threads.ReceiveThreadImpl">
+        <constructor-arg ref="TelegramBot"/>
+        <constructor-arg ref="UserSessionFactory"/>
+    </bean>
+
+    <bean id="UserSessionFactory" class="site.kiselev.telegram.UserSessionFactoryImpl">
+    </bean>
+
+
+
+</beans>

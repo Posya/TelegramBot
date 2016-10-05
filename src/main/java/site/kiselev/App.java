@@ -1,5 +1,7 @@
 package site.kiselev;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import site.kiselev.telegram.Telegram;
 
 /**
@@ -8,8 +10,10 @@ import site.kiselev.telegram.Telegram;
 public class App {
 
     public static void main(String[] args) {
-        Telegram telegram = new Telegram();
-//        Console console = new Console();
+        ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+
+        Telegram telegram = context.getBean("Telegram", Telegram.class);
+        telegram.run();
     }
 
 }
