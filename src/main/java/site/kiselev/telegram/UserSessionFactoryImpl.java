@@ -7,6 +7,8 @@ import com.google.common.cache.RemovalListener;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
@@ -15,6 +17,7 @@ import java.util.function.Consumer;
 /**
  * UserSessionFactory
  */
+@Service
 public class UserSessionFactoryImpl implements UserSessionFactory {
 
     private final Logger logger = LoggerFactory.getLogger(UserSessionFactoryImpl.class);
@@ -32,6 +35,7 @@ public class UserSessionFactoryImpl implements UserSessionFactory {
         cache = buildCache(otherLoader);
     }
 
+    @Autowired
     public UserSessionFactoryImpl(Consumer<SendMessage> sendFunction) {
         logger.debug("Creating new UserSessionFactory");
         CacheLoader<Integer, UserSession> loader = new CacheLoader<Integer, UserSession>() {

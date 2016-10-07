@@ -12,4 +12,5 @@ gradle-app.setting
 /classes/
 
 src/main/java/site/kiselev/ApplicationConfig.java
+src/main/resources/Protected.xml
 /testdata/

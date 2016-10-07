@@ -5,6 +5,7 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
@@ -56,11 +57,17 @@ public class UserSessionImpl implements UserSession, Runnable {
 
     @Override
     public void run() {
+        read();
         while (!isExit) {
-            Update update = read();
-            SendMessage message = new SendMessage(userID, "*You wrote:* " + update.message().text())
-                    .parseMode(ParseMode.Markdown);
-            write(message);
+            write("Введите имя");
+            String name = read().message().text();
+            if (name.toLowerCase().equals("выход")) {
+                write("Ок, начнём с начала.");
+                continue;
+            }
+            write("Введите фамилию");
+            String lastName = read().message().text();
+            write("Здравствуйте " + name + " " + lastName);
         }
     }
 
@@ -78,5 +85,14 @@ public class UserSessionImpl implements UserSession, Runnable {
 
     private void write(SendMessage message) {
         sendFunction.accept(message);
+    }
+
+    private void write(String text) {
+        SendMessage message = new SendMessage(userID, text).parseMode(ParseMode.Markdown);
+        write(message);
+    }
+
+    private void clear() {
+        receiveQueue.clear();
     }
 }

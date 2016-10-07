@@ -1,42 +1,51 @@
 package site.kiselev.telegram;
 
-import com.pengrad.telegrambot.TelegramBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import site.kiselev.telegram.threads.ReceiveThread;
-import site.kiselev.telegram.threads.SendThread;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import site.kiselev.telegram.threads.ReceiveCallable;
+import site.kiselev.telegram.threads.SendCallable;
 
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Telegram class
  */
+@Component("Telegram")
 public class TelegramImpl implements Telegram {
 
     private final Logger logger = LoggerFactory.getLogger(TelegramImpl.class);
 
-    private TelegramBot bot;
-    private SendThread sendThread;
-    private UserSessionFactory userSessionFactory = new UserSessionFactoryImpl(sendThread.getSendFunction());
-    private ReceiveThread receiveThread;
-    private boolean isExit = false;
+    @Autowired
+    private SendCallable sendCallable;
+//    @Autowired
+//    private UserSessionFactory userSessionFactory;
+    @Autowired
+    private ReceiveCallable receiveCallable;
 
+    private boolean isExit = false;
 
     @Override
     public void run() {
-        ExecutorService sendExecutor = Executors.newSingleThreadExecutor();
-        ExecutorService receiveExecutor = Executors.newSingleThreadExecutor();
+        logger.trace("Creating ExecutorServices");
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        logger.trace("Starting futures");
+        Future<Boolean> sendFuture      = executor.submit(sendCallable);;
+        Future<Boolean> receiveFuture   = executor.submit(receiveCallable);
+        logger.trace("Entering loop");
         try {
             while (!isExit) {
-                if (sendExecutor.isTerminated()) {
-                    logger.debug("Starting sendExecutor");
-                    sendExecutor.submit(sendThread);
+                if (sendFuture.isDone()) {
+                    logger.debug("Starting sendFuture");
+                    sendFuture = executor.submit(sendCallable);
                 }
-                if (receiveExecutor.isTerminated()) {
-                    logger.debug("Starting receiveExecutor");
-                    receiveExecutor.submit(sendThread);
+                if (receiveFuture.isDone()) {
+                    logger.debug("Starting receiveFuture");
+                    receiveFuture = executor.submit(receiveCallable);
                 }
                 Thread.sleep(1000);
             }
@@ -44,9 +53,11 @@ public class TelegramImpl implements Telegram {
             logger.error("Interrupted: ", e);
             logger.debug(Arrays.toString(e.getStackTrace()));
         }
+        logger.trace("Exiting loop");
     }
 
     public void exit() {
+        logger.trace("Exit is called");
         isExit = true;
     }
 }

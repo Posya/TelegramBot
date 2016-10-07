@@ -2,16 +2,17 @@ package site.kiselev.telegram.threads;
 
 import com.pengrad.telegrambot.request.SendMessage;
 
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
 /**
- * Created by posya on 10/5/16.
+ * SendCallable interface
  */
-public interface SendThread extends Runnable {
+public interface SendCallable extends Callable<Boolean> {
     Consumer<SendMessage> getSendFunction();
 
     @Override
-    void run();
+    Boolean call();
 
     void exit();
 }

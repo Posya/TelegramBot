@@ -5,24 +5,29 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
 /**
- * SendThread class
+ * SendCallable class
  */
-public class SendThreadImpl implements SendThread {
+@Component
+public class SendCallableImpl implements SendCallable {
 
-    private final Logger logger = LoggerFactory.getLogger(SendThreadImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(SendCallableImpl.class);
     private final TelegramBot bot;
 
+    @Autowired
     private BlockingQueue<SendMessage> sendQueue;
     private boolean isExit = false;
 
-    public SendThreadImpl(TelegramBot bot) {
+    @Autowired
+    public SendCallableImpl(TelegramBot bot) {
+        logger.trace("Creating SendCallableImpl");
         this.bot = bot;
     }
 
@@ -39,7 +44,7 @@ public class SendThreadImpl implements SendThread {
     }
 
     @Override
-    public void run() {
+    public Boolean call() {
         try {
             while(!isExit) {
                 final SendMessage message = sendQueue.take();
@@ -56,10 +61,12 @@ public class SendThreadImpl implements SendThread {
             logger.error("Exception: {}", e);
             logger.debug(Arrays.toString(e.getStackTrace()));
         }
+        return true;
     }
 
     @Override
     public void exit() {
+        logger.trace("Exit is called");
         isExit = true;
     }
 }
