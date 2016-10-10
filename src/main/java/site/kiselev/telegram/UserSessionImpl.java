@@ -5,7 +5,6 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
@@ -17,9 +16,9 @@ import java.util.function.Consumer;
 /**
  * UserSession
  */
-public class UserSessionImpl implements UserSession, Runnable {
+class UserSessionImpl implements UserSession, Runnable {
 
-    private final Logger logger = LoggerFactory.getLogger(UserSessionImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Integer userID;
     private final Consumer<SendMessage> sendFunction;
 
@@ -27,7 +26,7 @@ public class UserSessionImpl implements UserSession, Runnable {
     private ExecutorService userSessionExecutor;
     private boolean isExit = false;
 
-    public UserSessionImpl(Integer userID, Consumer<SendMessage> sendFunction) throws Exception {
+    UserSessionImpl(Integer userID, Consumer<SendMessage> sendFunction) throws Exception {
         this.userID = userID;
         this.sendFunction = sendFunction;
         receiveQueue = new LinkedBlockingQueue<>();
@@ -44,6 +43,7 @@ public class UserSessionImpl implements UserSession, Runnable {
         }
         try {
             receiveQueue.put(update);
+            logger.trace("New update was added to queue: {}", update);
         } catch (InterruptedException e) {
             logger.error("Can't put update to queue. Update: {}", update);
             logger.debug(Arrays.toString(e.getStackTrace()));

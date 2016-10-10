@@ -13,6 +13,5 @@ public interface SendCallable extends Callable<Boolean> {
 
     @Override
     Boolean call();
-
     void exit();
 }

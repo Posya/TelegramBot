@@ -14,11 +14,12 @@ import java.util.function.Consumer;
 
 /**
  * SendCallable class
+ * Обеспечивает отправку сообщений из исходящей очереди.
  */
 @Component
 public class SendCallableImpl implements SendCallable {
 
-    private final Logger logger = LoggerFactory.getLogger(SendCallableImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final TelegramBot bot;
 
     @Autowired
@@ -33,9 +34,11 @@ public class SendCallableImpl implements SendCallable {
 
     @Override
     public Consumer<SendMessage> getSendFunction() {
+        logger.trace("getSendFunction was called");
         return (message) -> {
             try {
                 sendQueue.put(message);
+                logger.trace("Message was added to Send Queue: {}", message);
             } catch (InterruptedException e) {
                 logger.error("Can't put message to queue. Message: {}", message);
                 logger.debug(Arrays.toString(e.getStackTrace()));
@@ -48,6 +51,7 @@ public class SendCallableImpl implements SendCallable {
         try {
             while(!isExit) {
                 final SendMessage message = sendQueue.take();
+                logger.trace("SendMessage: {}", message);
                 SendResponse sendResponse = bot.execute(message);
                 logger.trace("SendResponse: {}", sendResponse);
                 if (sendResponse.message() == null) {

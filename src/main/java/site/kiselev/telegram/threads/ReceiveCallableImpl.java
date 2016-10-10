@@ -14,11 +14,12 @@ import site.kiselev.telegram.UserSessionFactory;
 import java.util.Arrays;
 
 /**
- * ReceiveCallable
+ * ReceiveCallable class
+ * Обеспечивает получение сообщений и занесение их во входящие очереди UserSession.
  */
 @Component
 public class ReceiveCallableImpl implements ReceiveCallable {
-    private final Logger logger = LoggerFactory.getLogger(ReceiveCallableImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final TelegramBot bot;
     private final UserSessionFactory userSessionFactory;

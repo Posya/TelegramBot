@@ -16,6 +16,7 @@ import static site.kiselev.telegram.ApplicationConfig.TELEGRAM_BOT_API_TOKEN;
 
 /**
  * SpringConfiguration class
+ * Содержит конфигурацию бинов Spring
  */
 @Configuration
 public class SpringConfiguration {

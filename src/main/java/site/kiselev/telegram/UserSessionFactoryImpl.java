@@ -15,16 +15,18 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 /**
- * UserSessionFactory
+ * UserSessionFactory class
+ * Кэширует пользовательские сессии, загружает и выгружает их при необходимости.
  */
 @Service
 public class UserSessionFactoryImpl implements UserSessionFactory {
 
-    private final Logger logger = LoggerFactory.getLogger(UserSessionFactoryImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private RemovalListener<Integer, UserSession> removalListener = removal -> {
         UserSession userSession = removal.getValue();
         assert userSession != null;
+        logger.trace("Stopping UserSession");
         userSession.stop();
     };
 
@@ -41,6 +43,7 @@ public class UserSessionFactoryImpl implements UserSessionFactory {
         CacheLoader<Integer, UserSession> loader = new CacheLoader<Integer, UserSession>() {
             @Override
             public UserSession load(Integer userID) throws Exception {
+                logger.trace("Creating new UserSession for userID = {}", userID);
                 return new UserSessionImpl(userID, sendFunction);
             }
         };

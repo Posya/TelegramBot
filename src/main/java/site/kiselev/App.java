@@ -13,7 +13,7 @@ public class App {
         ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
 
         Telegram telegram = context.getBean("Telegram", Telegram.class);
-        telegram.run();
+        telegram.runTelegramBot();
     }
 
 }

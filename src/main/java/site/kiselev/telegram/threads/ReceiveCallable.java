@@ -8,6 +8,5 @@ import java.util.concurrent.Callable;
 public interface ReceiveCallable extends Callable<Boolean> {
     @Override
     Boolean call();
-
     void exit();
 }
