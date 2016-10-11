@@ -22,13 +22,13 @@ public class SendCallableImpl implements SendCallable {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final TelegramBot bot;
 
-    @Autowired
     private BlockingQueue<SendMessage> sendQueue;
     private boolean isExit = false;
 
     @Autowired
-    public SendCallableImpl(TelegramBot bot) {
+    public SendCallableImpl(TelegramBot bot, BlockingQueue<SendMessage> sendQueue) {
         logger.trace("Creating SendCallableImpl");
+        this.sendQueue = sendQueue;
         this.bot = bot;
     }
 
@@ -64,6 +64,7 @@ public class SendCallableImpl implements SendCallable {
         } catch (Throwable e) {
             logger.error("Exception: {}", e);
             logger.debug(Arrays.toString(e.getStackTrace()));
+            throw new Error(e);
         }
         return true;
     }
