@@ -1,7 +1,6 @@
 group 'site.kiselev'
 version '1.0'
 
-
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'application'
@@ -15,29 +14,37 @@ jar {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-mainClassName = 'site.kiselev.App'
-
 repositories {
     mavenCentral()
 }
 
+configurations.all {
+    exclude group: "commons-logging", module: "commons-logging"
+}
+
+//configurations {
+//    all*.exclude group: "org.slf4j", module: "slf4j-log4j12"
+//    all*.exclude group: "log4j", module: "log4j"
+//}
+
 dependencies {
     //Spring
-    compile ('org.springframework:spring-context:4.3.3.RELEASE') {
-        //exclude module: 'commons-logging'
-    }
+    compile group: 'org.springframework',               name :'spring-context',                 version: '4.3.3.RELEASE'
+
     // Logging
-    //compile 'org.slf4j:jcl-over-slf4j:1.5.8'
-    compile group: 'org.slf4j',                         name: 'slf4j-api',                      version: '1.7.21'
-    compile group: 'org.apache.logging.log4j',          name: 'log4j-slf4j-impl',               version: '2.6.1'
-    compile group: 'org.apache.logging.log4j',          name: 'log4j-core',                     version: '2.6.1'
+    compile ('org.slf4j:jcl-over-slf4j:1.7.21')
+    compile ('org.slf4j:slf4j-api:1.7.21')
+    compile ('org.apache.logging.log4j:log4j-slf4j-impl:2.6.1')
+    compile ('org.apache.logging.log4j:log4j-core:2.6.1')
+    compile ('org.apache.logging.log4j:log4j-jcl:2.6.1')
 
     //Telegram
-    compile group: 'com.github.pengrad', name: 'java-telegram-bot-api', version: '2.1.1'
+    compile ('com.github.pengrad:java-telegram-bot-api:2.1.1')
 
     // Guava Cache
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+    compile ('com.google.guava:guava:19.0')
 
     //Testing
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile ('junit:junit:4.12')
+    testCompile ('org.mockito:mockito-core:2.1.0')
 }
