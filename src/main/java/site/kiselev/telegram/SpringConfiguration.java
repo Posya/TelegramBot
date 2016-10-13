@@ -6,7 +6,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import site.kiselev.telegram.threads.SendCallable;
+import site.kiselev.telegram.threads.SendCompletableFutureFabric;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -27,8 +27,8 @@ public class SpringConfiguration {
 
     @Bean
     @Autowired
-    public Consumer<SendMessage> sendFunction(SendCallable sendCallable) {
-        return sendCallable.getSendFunction();
+    public Consumer<SendMessage> sendFunction(SendCompletableFutureFabric sendCompletableFutureFabric) {
+        return sendCompletableFutureFabric.getSendFunction();
     }
 
     @Bean
